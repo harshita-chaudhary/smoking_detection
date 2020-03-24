@@ -44,7 +44,7 @@ The trained weights are stored in data/chekcpoints. This is used while extractin
 ## Demo/Using models
 
 Demo on how to run is uploaded on Youtube.
-Link: 
+Link: https://www.youtube.com/watch?v=VDf8s8x4WLA&list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG&index=6
 
 ## References
 http://jeffdonahue.com/lrcn/
