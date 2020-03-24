@@ -64,7 +64,6 @@ def main(videos=5):
     output_json["smoking"] = []
     data = DataSet()
     # model = load_model('data/checkpoints/inception.057-1.16.hdf5')
-    print(data.data)
     for video in data.data:
         X, y = [], []
 
