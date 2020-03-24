@@ -76,3 +76,29 @@ for video in data.data:
     pbar.update(1)
 
 pbar.close()
+
+def extract_for_video(path, filename):
+    dest_dir = os.path.join('data', 'sequences')
+    dest_path = os.path.join(dest_dir, filename + '-' + str(seq_length) + \
+        '-features')  # numpy will auto-append .npy
+
+    # Check if we already have it.
+    if os.path.isfile(dest_path + '.npy'):
+        print("Features already exist for ", filename)
+
+    # Get the frames for this video.
+    frames = data.get_frames_for_sample(video)
+
+    # Now downsample to just the ones we need.
+    # frames = data.rescale_list(frames, seq_length)
+
+    # Now loop through and extract features to build the sequence.
+    sequence = []
+    for image in frames:
+        features = model.extract(image)
+        sequence.append(features)
+    # print(path)
+    if not (os.path.exists(dest_dir)):
+        os.mkdir(dest_dir)
+    # Save the sequence.
+    np.save(dest_path, sequence)

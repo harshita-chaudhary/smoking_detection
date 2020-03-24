@@ -68,6 +68,8 @@ def main(videos=5):
         X, y = [], []
 
         sequences = data.get_extracted_sequence(data_type, video)
+        if sequences is None:
+            print("Sequence data does not exist for ", video)
         total = sequences.shape[0]
         frames = np.arange(total)
         frame_pred = np.zeros(total)
@@ -78,10 +80,9 @@ def main(videos=5):
         end_frame = 40
         start_frame = 0
         # print("Number of frames: ", total )
+        print("video: " + video[2])
         while end_frame < sequences.shape[0]:
-
             X = []
-            print("video: " + video[2] + " start frame: " + str(start_frame) + " end frame: " + str(end_frame))
             X.append(sequences[start_frame: end_frame,:])
             # sequence = sequence.reshape(1, 3, 3)
             predictions = model.predict(np.array(X), batch_size=1)
