@@ -57,9 +57,6 @@ def main(videos=5):
         data_type = 'features'
         image_shape = None
 
-    # validate(data_type, model, saved_model=None,
-    #          image_shape=image_shape, class_limit=4)
-
     output_json = {}
     output_json["smoking"] = []
     data = DataSet()
@@ -73,7 +70,7 @@ def main(videos=5):
         total = sequences.shape[0]
         frames = np.arange(total)
         frame_pred = np.zeros(total)
-        frame_pred_prob = []
+        frame_pred_prob = np.zeros(total)
         # X.append(sequence)
         y.append(data.get_class_one_hot(video[1]))
 
@@ -93,9 +90,11 @@ def main(videos=5):
                 # print(predictions)
                 label_predictions[label] = predictions[0][i]
             # print(label_predictions)
-            frame_pred_prob.append(str(label_predictions["smoking"]))
+            # frame_pred_prob.append(str(label_predictions["smoking"]))
+            frame_pred_prob[start_frame:end_frame] = label_predictions["smoking"]
             if label_predictions["smoking"] > 0.5:
                 frame_pred[start_frame:end_frame] = 1
+
             #
             # sorted_lps = sorted(label_predictions.items(), key=operator.itemgetter(1), reverse=True)
             # for i, class_prediction in enumerate(sorted_lps):
@@ -106,6 +105,7 @@ def main(videos=5):
             #     i += 1
             start_frame += 1
             end_frame += 1
+
         # print(frame_pred)
         plt.title("Smoking action detection")
         plt.xlabel("Frame")
@@ -113,7 +113,9 @@ def main(videos=5):
         plt.plot(frames, frame_pred)
         plt.show()
         plt.figure()
-        output_json["smoking"] = dict(zip(frames.tolist(), frame_pred_prob))
+        # frame_pred_prob = frame_pred_prob.tolist()
+        frame_pred_prob = ['{}'.format(x) for x in frame_pred_prob]
+        output_json["smoking"] = list(zip(frames.tolist(), frame_pred_prob))
         y = json.dumps(output_json)
         # with open('frameLabel.json', 'w') as outfile:
         #     json.dump(y, outfile)
