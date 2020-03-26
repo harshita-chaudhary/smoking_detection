@@ -39,7 +39,8 @@ The RNN model is trained by running `train.py`. This trains the LSTM layers foll
 The trained weights are stored in data/chekcpoints. This is used while classifying the videos.
 
 TThe CNN model is trained by running `train_cnn.py`. This trains the InceptionV3 model with initial weights taken from the model trained on ImageNet. The model is further train on the HMDB data that is present in the data/train and data/test directories.
-The trained weights are stored in data/chekcpoints. This is used while extracting the features.
+
+The trained weights are stored in "data/chekcpoints". This is used while extracting the features.
 
 ## Demo/Using models
 
