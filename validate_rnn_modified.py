@@ -137,10 +137,13 @@ def main(videos=5):
         plt.xlabel("Frame")
         plt.ylabel("Smoking action present")
         plt.plot(frames, frame_pred)
+
+        output_path = os.path.join('data', 'out', video[2] + '.png')
+        print("Saving output labels to: ", output_path)
+
+        plt.savefig(output_path)
         plt.show()
         plt.figure()
-        output_path = os.path.join('data', 'out', video[2] + '.png')
-        plt.savefig(output_path)
         output_json["smoking"] = list(zip(frames.tolist(), frame_pred_prob))
         y = json.dumps(output_json)
         # with open('frameLabel.json', 'w') as outfile:
@@ -159,9 +162,7 @@ def label_video(video_path, labels, label_prob):
 
     start_frame = 0
     end_frame = None
-    filepath = os.path.join('data', video_path[0], video_path[1], video_path[2] + '.avi')
-    if video_path[1] == 'smoking':
-        filepath = os.path.join('data', video_path[0], video_path[1], video_path[2] + '.mp4')
+    filepath = os.path.join('data', video_path[0], video_path[1], video_path[2] + "." + video_path[4])
     reader = cv2.VideoCapture(filepath)
     # video_fn = video + '.avi'
     video_fn = video_path[2]+'.avi'
@@ -174,7 +175,8 @@ def label_video(video_path, labels, label_prob):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
     thickness = 2
     font_scale = 0.35
-    print("Total number of frames ", str(num_frames))
+    print("Filepath : ", filepath)
+    print("Total number of frames ", str(num_frames) )
     # Frame numbers and length of output video
     frame_num = 0
     assert start_frame < num_frames - 1
