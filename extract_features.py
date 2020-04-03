@@ -13,7 +13,7 @@ Then set the same number when training models.
 """
 import numpy as np
 import os.path
-from data import DataSet
+from data_processor import DataSet
 from extractor import Extractor
 from tqdm import tqdm
 
@@ -32,17 +32,17 @@ session = tf.compat.v1.Session(config=config)
 
 
 # Set defaults.
-seq_length = 40
+seq_length = 50
 class_limit = None  # Number of classes to extract. Can be 1-101 or None for all.
 
 # Get the dataset.
 data = DataSet(seq_length=seq_length, class_limit=class_limit)
 
 # get the model.
-model = Extractor()
+model = Extractor(weights="data/checkpoints/inception.002-0.30.hdf5")
 
 # Loop through data.
-print(data.data)
+# print(data.data)
 pbar = tqdm(total=len(data.data))
 for video in data.data:
 

@@ -13,7 +13,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
-from data import DataSet
+from data_processor import DataSet
 import os.path
 
 data = DataSet()
@@ -71,6 +71,7 @@ def get_model(weights='imagenet'):
 
     # this is the model we will train
     model = Model(inputs=base_model.input, outputs=predictions)
+    model.summary()
     return model
 
 def freeze_all_but_top(model):

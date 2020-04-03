@@ -13,7 +13,7 @@ Then set the same number when training models.
 """
 import numpy as np
 import os.path
-from data import DataSet
+from data_processor import DataSet
 from extractor import Extractor
 from tqdm import tqdm
 
@@ -30,75 +30,51 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 
+def extract_full_features(seq_length = 40):
+    # Set defaults.
 
-# Set defaults.
-seq_length = 40
-class_limit = None  # Number of classes to extract. Can be 1-101 or None for all.
+    class_limit = None  # Number of classes to extract. Can be 1-101 or None for all.
 
-# Get the dataset.
-data = DataSet(seq_length=seq_length, class_limit=class_limit)
+    # Get the dataset.
+    data = DataSet(seq_length=seq_length, class_limit=class_limit, check_dir='data/check')
 
-# get the model.
-model = Extractor()
+    # get the model.
+    model = Extractor()
 
-# Loop through data.
-print(data.data)
-pbar = tqdm(total=len(data.data))
-for video in data.data:
+    # Loop through data.
+    print(data.data)
+    pbar = tqdm(total=len(data.data))
+    for video in data.data:
 
-    # Get the path to the sequence for this video.
-    path = os.path.join('data', 'sequences', video[2] + '-' + str(seq_length) + \
-        '-features')  # numpy will auto-append .npy
+        # Get the path to the sequence for this video.
+        path = os.path.join('data', 'sequences_test', video[2] + '-' + str(seq_length) + \
+            '-features')  # numpy will auto-append .npy
 
-    # Check if we already have it.
-    if os.path.isfile(path + '.npy'):
+        # Check if we already have it.
+        if os.path.isfile(path + '.npy'):
+            pbar.update(1)
+            continue
+
+        # Get the frames for this video.
+        frames = data.get_frames_for_sample(video)
+
+        # Now downsample to just the ones we need.
+        # frames = data.rescale_list(frames, seq_length)
+
+        # Now loop through and extract features to build the sequence.
+        sequence = []
+        for image in frames:
+            features = model.extract(image)
+            sequence.append(features)
+        # print(path)
+        output_dir = os.path.join('data', 'sequences_test')
+        if not (os.path.exists(output_dir)):
+            # create the directory you want to save to
+            os.mkdir(output_dir)
+        # Save the sequence.
+        np.save(path, sequence)
+
         pbar.update(1)
-        continue
 
-    # Get the frames for this video.
-    frames = data.get_frames_for_sample(video)
+    pbar.close()
 
-    # Now downsample to just the ones we need.
-    # frames = data.rescale_list(frames, seq_length)
-
-    # Now loop through and extract features to build the sequence.
-    sequence = []
-    for image in frames:
-        features = model.extract(image)
-        sequence.append(features)
-    # print(path)
-    # if not (os.path.exists(path)):
-    #     # create the directory you want to save to
-    #     os.mkdir(path)
-    # Save the sequence.
-    np.save(path, sequence)
-
-    pbar.update(1)
-
-pbar.close()
-
-def extract_for_video(path, filename):
-    dest_dir = os.path.join('data', 'sequences')
-    dest_path = os.path.join(dest_dir, filename + '-' + str(seq_length) + \
-        '-features')  # numpy will auto-append .npy
-
-    # Check if we already have it.
-    if os.path.isfile(dest_path + '.npy'):
-        print("Features already exist for ", filename)
-
-    # Get the frames for this video.
-    frames = data.get_frames_for_sample(video)
-
-    # Now downsample to just the ones we need.
-    # frames = data.rescale_list(frames, seq_length)
-
-    # Now loop through and extract features to build the sequence.
-    sequence = []
-    for image in frames:
-        features = model.extract(image)
-        sequence.append(features)
-    # print(path)
-    if not (os.path.exists(dest_dir)):
-        os.mkdir(dest_dir)
-    # Save the sequence.
-    np.save(dest_path, sequence)

@@ -3,7 +3,7 @@ Train our RNN on extracted features or images.
 """
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, CSVLogger
 from models import ResearchModels
-from data import DataSet
+from data_processor import DataSet
 import time
 import os.path
 
@@ -14,6 +14,7 @@ def train(data_type, seq_length, model, saved_model=None,
     checkpointer = ModelCheckpoint(
         filepath=os.path.join('data', 'checkpoints', model + '-' + data_type + \
             '.{epoch:03d}-{val_loss:.3f}.hdf5'),
+        monitor='val_accuracy',
         verbose=1,
         save_best_only=True)
 
@@ -90,9 +91,10 @@ def main():
     model = 'lstm'
     saved_model = None  # None or weights file
     class_limit = None  # int, can be 1-101 or None
-    seq_length = 40
+    seq_length = 50
     load_to_memory = True  # pre-load the sequences into memory
-    batch_size = 32
+    # batch_size = 32
+    batch_size = 16
     nb_epoch = 1000
 
     # Chose images or features and image shape based on network.
