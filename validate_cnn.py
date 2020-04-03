@@ -6,7 +6,7 @@ import operator
 import random
 import glob
 import os.path
-from data import DataSet
+from data_processor import DataSet
 from processor import process_image
 from keras.models import load_model
 
