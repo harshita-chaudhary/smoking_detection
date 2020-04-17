@@ -43,11 +43,15 @@ TThe CNN model is trained by running `train_cnn.py`. This trains the InceptionV3
 The originally trained weights are stored in "data/chekcpoints". This is used while extracting the features.
 
 The latest trained model download links:
+
 CNN Model: https://drive.google.com/file/d/1eeB0G8D6F7eV7OGMeV7GvE0gxWVc5Xmd/view?usp=sharing
+
 LSTM model: https://drive.google.com/file/d/16ShJQ7G9bHIH5kv30X0ciKJpvdBwxC2a/view?usp=sharing
 
 Other trained models:
+
 3D spatial CNN: https://drive.google.com/file/d/18fBz26PdGsl8SXdgp3JNfhq_jWccybyy/view?usp=sharing
+
 3D temporal CNN: https://drive.google.com/file/d/1gaCFSib10t6KfFyOkG9CKrXYONk4Wtq_/view?usp=sharing
 
 
