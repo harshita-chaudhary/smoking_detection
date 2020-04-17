@@ -22,7 +22,7 @@ def train(data_type, seq_length, model, saved_model=None,
     tb = TensorBoard(log_dir=os.path.join('data', 'logs', model))
 
     # Helper: Stop when we stop learning.
-    early_stopper = EarlyStopping(patience=5)
+    early_stopper = EarlyStopping(patience=15)
 
     # Helper: Save results.
     timestamp = time.time()
@@ -88,17 +88,19 @@ def main():
     this file."""
     # model can be one of lstm, lrcn, mlp, conv_3d, c3d
     # model = 'lstm'
-    model = 'lstm'
+    model = 'conv_flow_3d'
     saved_model = None  # None or weights file
     class_limit = None  # int, can be 1-101 or None
     seq_length = 50
-    load_to_memory = True  # pre-load the sequences into memory
+    load_to_memory = False  # pre-load the sequences into memory
+    # load_to_memory = False  # pre-load the sequences into memory
+
     # batch_size = 32
     batch_size = 16
     nb_epoch = 1000
 
     # Chose images or features and image shape based on network.
-    if model in ['conv_3d', 'c3d', 'lrcn']:
+    if model in ['conv_3d', 'c3d', 'lrcn', 'conv_flow_3d']:
         data_type = 'images'
         image_shape = (80, 80, 3)
     elif model in ['lstm', 'mlp']:
@@ -106,6 +108,8 @@ def main():
         image_shape = None
     else:
         raise ValueError("Invalid model. See train.py for options.")
+
+    data_type = "flow"
 
     train(data_type, seq_length, model, saved_model=saved_model,
           class_limit=class_limit, image_shape=image_shape,

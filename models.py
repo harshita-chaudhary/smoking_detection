@@ -37,8 +37,8 @@ class ResearchModels():
 
         # Set the metrics. Only use top k if there's a need.
         metrics = ['accuracy']
-        if self.nb_classes >= 10:
-            metrics.append('top_k_categorical_accuracy')
+        # if self.nb_classes >= 10:
+        #     metrics.append('top_k_categorical_accuracy')
 
         # Get the appropriate model.
         if self.saved_model is not None:
@@ -60,6 +60,10 @@ class ResearchModels():
             print("Loading Conv3D")
             self.input_shape = (seq_length, 80, 80, 3)
             self.model = self.conv_3d()
+        elif model == 'conv_flow_3d':
+            print("Loading Flow Conv3D")
+            self.input_shape = (seq_length, 80, 80, 2)
+            self.model = self.conv_flow_3d()
         elif model == 'c3d':
             print("Loading C3D")
             self.input_shape = (seq_length, 80, 80, 3)
@@ -69,10 +73,11 @@ class ResearchModels():
             sys.exit()
 
         # Now compile the network.
-        optimizer = Adam(lr=1e-5, decay=1e-6)
-        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
-                           metrics=metrics)
+        # optimizer = Adam(lr=1e-5, decay=1e-6)
+        optimizer = Adam(lr=1e-4, decay=1e-6)
 
+        # self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=metrics)
+        self.model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=metrics)
         print(self.model.summary())
 
     def lstm(self):
@@ -162,6 +167,35 @@ class ResearchModels():
         return model
 
     def conv_3d(self):
+        """
+        Build a 3D convolutional network, based loosely on C3D.
+            https://arxiv.org/pdf/1412.0767.pdf
+        """
+        # Model.
+        model = Sequential()
+        model.add(Conv3D(
+            32, (3,3,3), activation='relu', input_shape=self.input_shape
+        ))
+        model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2)))
+        model.add(Conv3D(64, (3,3,3), activation='relu'))
+        model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2)))
+        model.add(Conv3D(128, (3,3,3), activation='relu'))
+        model.add(Conv3D(128, (3,3,3), activation='relu'))
+        model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2)))
+        model.add(Conv3D(256, (2,2,2), activation='relu'))
+        model.add(Conv3D(256, (2,2,2), activation='relu'))
+        model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2)))
+
+        model.add(Flatten())
+        model.add(Dense(1024))
+        model.add(Dropout(0.5))
+        model.add(Dense(1024))
+        model.add(Dropout(0.5))
+        model.add(Dense(self.nb_classes, activation='softmax'))
+
+        return model
+
+    def conv_flow_3d(self):
         """
         Build a 3D convolutional network, based loosely on C3D.
             https://arxiv.org/pdf/1412.0767.pdf

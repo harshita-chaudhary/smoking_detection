@@ -9,7 +9,7 @@ import os.path
 import sys
 import operator
 import threading
-from processor import process_image
+from processor import process_image, process_flow
 from keras.utils import to_categorical
 
 class threadsafe_iterator:
@@ -177,7 +177,7 @@ class DataSet():
         # Get the right dataset for the generator.
         train, test = self.split_train_test()
         data = train if train_test == 'train' else test
-
+        data = [sample for sample in data if len(self.get_frames_for_sample(sample))>self.seq_length]
         print("Creating %s generator with %d samples." % (train_test, len(data)))
 
         while 1:
@@ -192,28 +192,98 @@ class DataSet():
                 sample = random.choice(data)
 
                 # Check to see if we've already saved this sequence.
-                if data_type is "images":
+                if data_type is "images" or "flow":
                     # Get and resample frames.
                     frames = self.get_frames_for_sample(sample)
-                    frames = self.rescale_list(frames, self.seq_length)
+                    if data_type is "flow":
+                        # print(str(len(frames)), ' ', str(self.seq_length + 1))
+                        frames = self.rescale_list(frames, self.seq_length + 1)
+                        sequence = self.build_flow_sequence(frames)
 
-                    # Build the image sequence
-                    sequence = self.build_image_sequence(frames)
+                    else:
+                        frames = self.rescale_list(frames, self.seq_length)
+                        # Build the image sequence
+                        sequence = self.build_image_sequence(frames)
                 else:
                     # Get the sequence from disk.
                     sequence = self.get_extracted_sequence(data_type, sample)
-                    print(sequence.shape)
                     if sequence is None:
                         raise ValueError("Can't find sequence. Did you generate them?")
 
+                # print("Shape of the sequence", str(np.array(sequence).shape))
                 X.append(sequence)
                 y.append(self.get_class_one_hot(sample[1]))
 
             yield np.array(X), np.array(y)
 
+    def get_data_train_test(self, data_type, train_test):
+        """Return a generator that we can use to train on. There are
+        a couple different things we can return:
+
+        data_type: 'features', 'images'
+        """
+        # Get the right dataset for the generator.
+        train, test = self.split_train_test()
+        data = train if train_test == 'train' else test
+        data = [sample for sample in data if len(self.get_frames_for_sample(sample))>self.seq_length]
+
+        print("Total number of samples: ", len(data))
+
+        X, y = [], []
+
+        sequence = None
+
+        # Get a random sample.
+        for sample in data:
+            # Check to see if we've already saved this sequence.
+
+            if data_type in ["images", "flow"]:
+                # Get and resample frames.
+                frames = self.get_frames_for_sample(sample)
+                if data_type is "flow":
+                    frames = self.rescale_list(frames, self.seq_length + 1)
+                    sequence = self.build_flow_sequence(frames)
+
+                else:
+                    frames = self.rescale_list(frames, self.seq_length)
+                    # Build the image sequence
+                    sequence = self.build_image_sequence(frames)
+
+            # if data_type is "images":
+            #     # Get and resample frames.
+            #     frames = self.get_frames_for_sample(sample)
+            #     frames = self.rescale_list(frames, self.seq_length)
+            #
+            #     # Build the image sequence
+            #     sequence = self.build_image_sequence(frames)
+            else:
+                # Get the sequence from disk.
+                sequence = self.get_extracted_sequence(data_type, sample)
+                if sequence is None:
+                    raise ValueError("Can't find sequence. Did you generate them?")
+
+            X.append(sequence)
+            y.append(self.classes.index(sample[1]))
+            # y.append(self.get_class_one_hot(sample[1]))
+
+        return np.array(X), np.array(y)
+
     def build_image_sequence(self, frames):
         """Given a set of frames (filenames), build our sequence."""
         return [process_image(x, self.image_shape) for x in frames]
+
+    def build_flow_sequence(self, frames):
+        """Given a set of frames (filenames), build our sequence."""
+
+        flow = []
+        for i in range(1, len(frames)):
+            # if len(flow) == 0:
+            #     flow = process_flow(frames[i-1], frames[i], self.image_shape)
+            # else:
+            #     flow = np.dstack((flow, process_flow(frames[i-1], frames[i], self.image_shape)))
+            flow.append(process_flow(frames[i-1], frames[i], self.image_shape))
+        # print("Flow shape: ", np.array(flow).shape)
+        return flow
 
     def get_extracted_sequence(self, data_type, sample):
         """Get the saved extracted features."""

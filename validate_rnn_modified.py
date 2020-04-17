@@ -7,7 +7,7 @@ import urllib
 import cv2
 from keras.callbacks import TensorBoard, ModelCheckpoint, CSVLogger
 from tqdm import tqdm
-
+import math
 from models import ResearchModels
 import numpy as np
 import operator
@@ -63,7 +63,8 @@ def main(videos=5):
     # weights_path = get_file('lstm-features.hdf5', 'https://1drv.ms/u/s!AjwTYpyMoMlUll4oFEpdBU9dlppN?e=WVXhgu')
     # url = 'https://1drv.ms/u/s!AjwTYpyMoMlUll4oFEpdBU9dlppN?e=WVXhgu'
     # urllib.request.urlretrieve(url, 'data/checkpoints/lstm-features.hdf5')
-    model = load_model('data/checkpoints/lstm-features.009-0.454.hdf5')
+    # model = load_model('data/checkpoints/lstm-features.009-0.454.hdf5')
+    model = load_model('data/checkpoints/lstm-features.017-0.867.hdf5')
     # model = load_model('data/checkpoints/lstm-features.hdf5')
 
     extract_files(folders=['check'])
@@ -86,50 +87,47 @@ def main(videos=5):
     # model = load_model('data/checkpoints/inception.057-1.16.hdf5')
     for video in data.data:
         X, y = [], []
-
         sequences = data.get_extracted_sequence(data_type, video)
         total = sequences.shape[0]
         frames = np.arange(total)
         frame_pred = np.zeros(total)
         # print("Size : " + str(total))
-        frame_pred_prob = []
+        frame_pred_prob = np.empty(total)
+        frame_pred_prob[:] = np.nan
         # X.append(sequence)
         y.append(data.get_class_one_hot(video[1]))
         print("video: " + video[2])
         end_frame = 50
         start_frame = 0
-        # print("Number of frames: ", total )
+        print("Number of frames: ", total )
         label_predictions = {}
         while end_frame <= sequences.shape[0]:
 
             X = []
+            # x = []
+            # for i in range(start_frame, end_frame, 6):
+            #     x.append(sequences[i,:])
+            # X.append(x)
             # print("video: " + video[2] + " start frame: " + str(start_frame) + " end frame: " + str(end_frame))
             X.append(sequences[start_frame: end_frame,:])
             # sequence = sequence.reshape(1, 3, 3)
             predictions = model.predict(np.array(X), batch_size=1)
-
-            # Show how much we think it's each one.
             label_predictions = {}
             for i, label in enumerate(data.classes):
                 # print(predictions)
                 label_predictions[label] = predictions[0][i]
             # print(label_predictions)
-            frame_pred_prob.append(str(label_predictions["smoking"]))
             if label_predictions["smoking"] > 0.5:
                 frame_pred[start_frame:end_frame] = 1
-            #
-            # sorted_lps = sorted(label_predictions.items(), key=operator.itemgetter(1), reverse=True)
-            # for i, class_prediction in enumerate(sorted_lps):
-            #     # Just get the top five.
-            #     # if i > 4:
-            #     #     break
-            #     print("%s: %.2f" % (class_prediction[0], class_prediction[1]))
-            #     i += 1
+
+            frame_pred_prob[start_frame:end_frame] = str(label_predictions["smoking"])
+
             start_frame += 1
             end_frame += 1
 
-        for i in range(start_frame, end_frame-1):
-            frame_pred_prob.append(str(label_predictions["smoking"]))
+        for i in range(start_frame, min(sequences.shape[0], end_frame-1)):
+            # frame_pred_prob.append(str(label_predictions["smoking"]))
+            frame_pred_prob[i] = str(label_predictions["smoking"])
             if label_predictions["smoking"] > 0.5:
                 frame_pred[i] = 1
         # print(frame_pred)
@@ -207,7 +205,7 @@ def label_video(video_path, labels, label_prob):
         #             font_face, font_scale,
         #             color, thickness, 2)
         cv2.putText(image, 'Frame num: ' + str(frame_num) + ', Label =>' + str(label) +
-                    ', Prob =>' + label_prob[frame_num-1], (10, 20),
+                    ', Prob =>' + str(label_prob[frame_num-1]), (10, 20),
                     font_face, font_scale,
                     color, thickness, 2)
         # cv2.putText(image, 'Frame num: ' + str(frame_num) + ', Label =>' + str(label) +
