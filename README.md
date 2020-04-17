@@ -12,7 +12,7 @@ test,smoking,nice_smoking_girl_smoke_h_nm_np1_le_med_0,155
 1. Extract features for each video using InceptionV3 by running extract_features_full.py. This stores the features in data/sequences directory.
 1. Run validate_rnn_modified.py to classify the videos using the LSTM model. This generates a plot for each video with x-axis as the frame number and y-axis as the corresponding generated label. Since the videos used for testing are clipped videos and contain smoking or non-smoking action in entirity, the graph shows a straight line at either 0 or 1. 1 denotes smoking and 0 denotes non-smoking.
 
-To run the model on the 5 sample videos provided in Youtube (https://www.youtube.com/playlist?list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG), just run `python validate_rnn_modified.py`.
+To run the model on the 5 sample videos provided in Youtube (https://www.youtube.com/playlist?list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG), just run `python validate_rnn_modified.py`after placing the videos in the data/check folder. The output is generated in the data/out folder.
 
 ## Requirements
 
