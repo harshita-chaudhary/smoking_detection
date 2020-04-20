@@ -46,7 +46,7 @@ The latest trained model download links:
 
 CNN Model: https://drive.google.com/file/d/1eeB0G8D6F7eV7OGMeV7GvE0gxWVc5Xmd/view?usp=sharing
 
-LSTM model: https://drive.google.com/file/d/1ILTMEWuvJd3GUdqSJ9TlImpAT1qPX19U/view?usp=sharing
+LSTM model: https://drive.google.com/file/d/1p8VPsdI9jzpT7T0ZryWvsUwSaKbYaOcI/view?usp=sharing
 
 Other trained models:
 
