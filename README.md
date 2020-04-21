@@ -52,7 +52,7 @@ Other trained models:
 
 3D spatial CNN: https://drive.google.com/file/d/18fBz26PdGsl8SXdgp3JNfhq_jWccybyy/view?usp=sharing
 
-3D temporal CNN: https://drive.google.com/file/d/1gaCFSib10t6KfFyOkG9CKrXYONk4Wtq_/view?usp=sharing
+3D temporal CNN: https://drive.google.com/file/d/1wDToIFo55bI7dSlasIwTwIiZhOzhptL_/view?usp=sharing
 
 
 ## Demo/Using models
