@@ -44,9 +44,9 @@ The originally trained weights are stored in "data/chekcpoints". This is used wh
 
 The latest trained model download links:
 
-CNN Model: https://drive.google.com/file/d/1eeB0G8D6F7eV7OGMeV7GvE0gxWVc5Xmd/view?usp=sharing
+CNN Model: https://drive.google.com/file/d/1DgfeKLC6t9bbkCGuLiZcpi9iLfgh7LdK/view?usp=sharing
 
-LSTM model: https://drive.google.com/file/d/1obHCP5i6zA_LfAaj1kUu558tkSVlfYQG/view?usp=sharing
+LSTM model: https://drive.google.com/file/d/1Hrn9BZ7uC9jxhHzBEgkQWakzBBr8xAnU/view?usp=sharing
 
 Other trained models:
 
