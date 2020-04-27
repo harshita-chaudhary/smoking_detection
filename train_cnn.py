@@ -47,7 +47,7 @@ def get_generators():
         width_shift_range=0.2,
         height_shift_range=0.2)
 
-    test_datagen = ImageDataGenerator(rescale=1. / 255)
+    test_datagen = ImageDataGenerator(rescale=1./255)
 
     train_generator = train_datagen.flow_from_directory(
         os.path.join('data', 'train'),
@@ -92,7 +92,7 @@ def freeze_all_but_top(model):
         layer.trainable = False
 
     # compile the model (should be done *after* setting layers to non-trainable)
-    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
 
     return model
 
@@ -110,12 +110,11 @@ def freeze_all_but_mid_and_top(model):
     # we use SGD with a low learning rate
     model.compile(
         optimizer=SGD(lr=0.0001, momentum=0.9),
-        loss='categorical_crossentropy',
+        loss='binary_crossentropy',
         # metrics=['accuracy', 'top_k_categorical_accuracy'])
         metrics=['accuracy'])
 
     return model
-
 
 def train_model(model, nb_epoch, generators, callbacks=[]):
     train_generator, validation_generator = generators
@@ -150,7 +149,6 @@ def main(weights_file):
     model = train_model(model, 1000, generators, [checkpointer, early_stopper, csv_logger])
 
     # [checkpointer, early_stopper, tensorboard])
-
 
 if __name__ == '__main__':
     weights_file = None

@@ -39,7 +39,8 @@ def extract_full_features(seq_length = 40):
     data = DataSet(seq_length=seq_length, class_limit=class_limit, check_dir='data/check')
 
     # get the model.
-    model = Extractor()
+    # model = Extractor()
+    model = Extractor(weights="data/checkpoints/inception.009-0.29.hdf5")
 
     # Loop through data.
     print(data.data)

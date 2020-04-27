@@ -64,8 +64,8 @@ def main(videos=5):
     # url = 'https://1drv.ms/u/s!AjwTYpyMoMlUll4oFEpdBU9dlppN?e=WVXhgu'
     # urllib.request.urlretrieve(url, 'data/checkpoints/lstm-features.hdf5')
     # model = load_model('data/checkpoints/lstm-features.009-0.454.hdf5')
-    model = load_model('data/checkpoints/lstm-features.017-0.867.hdf5')
-    # model = load_model('data/checkpoints/lstm-features.hdf5')
+    # model = load_model('data/checkpoints/lstm-features.004-0.614.hdf5')
+    model = load_model('data/checkpoints/lstm-features.017-0.849.hdf5')
 
     extract_files(folders=['check'])
     extract_full_features(seq_length=seq_length)
@@ -84,53 +84,95 @@ def main(videos=5):
     output_json["smoking"] = []
     test_dir = "check"
     data = DataSet(seq_length=seq_length, check_dir='check')
+    random.shuffle(data.data)
+
     # model = load_model('data/checkpoints/inception.057-1.16.hdf5')
     for video in data.data:
         X, y = [], []
         sequences = data.get_extracted_sequence(data_type, video)
         total = sequences.shape[0]
         frames = np.arange(total)
-        frame_pred = np.zeros(total)
+        frame_pred = np.ones(total)
+        frame_pred_sum = np.zeros(total)
+        frame_pred_count = np.zeros(total)
         # print("Size : " + str(total))
         frame_pred_prob = np.empty(total)
         frame_pred_prob[:] = np.nan
         # X.append(sequence)
         y.append(data.get_class_one_hot(video[1]))
         print("video: " + video[2])
-        end_frame = 50
+        skip_clips = 15  #100
+        skip_frames = 2  #6
         start_frame = 0
+        end_frame = skip_frames*seq_length
+        # end_frame = 250
         print("Number of frames: ", total )
         label_predictions = {}
-        while end_frame <= sequences.shape[0]:
-
+        if end_frame > sequences.shape[0]:
+            sequences = data.rescale_list(sequences, seq_length)
             X = []
-            # x = []
-            # for i in range(start_frame, end_frame, 6):
-            #     x.append(sequences[i,:])
-            # X.append(x)
-            # print("video: " + video[2] + " start frame: " + str(start_frame) + " end frame: " + str(end_frame))
-            X.append(sequences[start_frame: end_frame,:])
-            # sequence = sequence.reshape(1, 3, 3)
+            X.append(sequences)
             predictions = model.predict(np.array(X), batch_size=1)
             label_predictions = {}
             for i, label in enumerate(data.classes):
                 # print(predictions)
                 label_predictions[label] = predictions[0][i]
             # print(label_predictions)
-            if label_predictions["smoking"] > 0.5:
-                frame_pred[start_frame:end_frame] = 1
+            # if label_predictions["smoking"] <= 0.5:
+                # frame_pred[start_frame:total] = 0
+            for i in range(start_frame, total):
+                frame_pred_sum[i] += label_predictions["smoking"]
+                frame_pred_count[i] += 1
+            # else:
+            #     frame_pred[start_frame:total] = -1
 
-            frame_pred_prob[start_frame:end_frame] = str(label_predictions["smoking"])
+            # frame_pred_prob[start_frame:total] = str(label_predictions["smoking"])
 
-            start_frame += 1
-            end_frame += 1
+        else:
+            while end_frame <= sequences.shape[0]:
 
-        for i in range(start_frame, min(sequences.shape[0], end_frame-1)):
-            # frame_pred_prob.append(str(label_predictions["smoking"]))
-            frame_pred_prob[i] = str(label_predictions["smoking"])
-            if label_predictions["smoking"] > 0.5:
-                frame_pred[i] = 1
+                X = []
+                x = []
+                for i in range(start_frame, end_frame, skip_frames):
+                    x.append(sequences[i,:])
+                X.append(x)
+                # print("video: " + video[2] + " start frame: " + str(start_frame) + " end frame: " + str(end_frame))
+                # X.append(sequences[start_frame: end_frame,:])
+                # sequence = sequence.reshape(1, 3, 3)
+                predictions = model.predict(np.array(X), batch_size=1)
+                label_predictions = {}
+                for i, label in enumerate(data.classes):
+                    # print(predictions)
+                    label_predictions[label] = predictions[0][i]
+                # print(label_predictions)
+                # if label_predictions["smoking"] <= 0.5:
+                #     frame_pred[start_frame:end_frame] = 0
+                for i in range(start_frame, end_frame):
+                    frame_pred_sum[i] += label_predictions["smoking"]
+                    frame_pred_count[i] += 1
+                # else:
+                #     frame_pred[start_frame:end_frame] = 0
+
+                # frame_pred_prob[start_frame:end_frame] = str(label_predictions["smoking"])
+
+                start_frame += skip_clips
+                end_frame += skip_clips
+
+            for i in range(start_frame, min(sequences.shape[0], end_frame-1)):
+                frame_pred_sum[i] += label_predictions["smoking"]
+                frame_pred_count[i] += 1
+            #
+            # for i in range(start_frame, min(sequences.shape[0], end_frame-1)):
+            #     # frame_pred_prob.append(str(label_predictions["smoking"]))
+            #     frame_pred_prob[i] = str(label_predictions["smoking"])
+            #     if label_predictions["smoking"] <= 0.5:
+            #         frame_pred[i] = 0
         # print(frame_pred)
+        for i in range(0,total):
+            frame_pred_prob[i] = frame_pred_sum[i]/frame_pred_count[i]
+            if frame_pred_prob[i] < 0.5:
+                frame_pred[i] = 0
+
         plt.title("Smoking action detection")
         plt.xlabel("Frame")
         plt.ylabel("Smoking action present")
@@ -140,8 +182,9 @@ def main(videos=5):
         print("Saving output labels to: ", output_path)
 
         plt.savefig(output_path)
-        plt.show()
-        plt.figure()
+        plt.close()
+        # plt.show()
+        # plt.figure()
         output_json["smoking"] = list(zip(frames.tolist(), frame_pred_prob))
         y = json.dumps(output_json)
         # with open('frameLabel.json', 'w') as outfile:
@@ -204,7 +247,7 @@ def label_video(video_path, labels, label_prob):
         # cv2.putText(image,  'Label =>' + str(label), (x, y + h + 30),
         #             font_face, font_scale,
         #             color, thickness, 2)
-        cv2.putText(image, 'Frame num: ' + str(frame_num) + ', Label =>' + str(label) +
+        cv2.putText(image, 'Frame: ' + str(frame_num) + ', Label: ' + str(label) +
                     ', Prob =>' + str(label_prob[frame_num-1]), (10, 20),
                     font_face, font_scale,
                     color, thickness, 2)

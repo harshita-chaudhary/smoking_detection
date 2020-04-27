@@ -39,7 +39,8 @@ class_limit = None  # Number of classes to extract. Can be 1-101 or None for all
 data = DataSet(seq_length=seq_length, class_limit=class_limit)
 
 # get the model.
-model = Extractor(weights="data/checkpoints/inception.035-0.17.hdf5")
+model = Extractor(weights="data/checkpoi7nts/inception.009-0.29.hdf5")
+# model = Extractor(weights="data/checkpoints/inception.035-0.17.hdf5")
 
 # Loop through data.
 # print(data.data)
