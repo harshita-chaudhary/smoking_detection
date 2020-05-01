@@ -36,6 +36,13 @@ def validate(data_type, model, seq_length=50, saved_model=None,
 
     # Get the model.
     rm = ResearchModels(len(data.classes), model, seq_length, saved_model)
+    rm.model.layers.pop()
+    rm.model.outputs = [rm.model.layers[-2].output]
+    rm.model.output_layers = [rm.model.layers[-2]]
+    rm.model.layers[-2].outbound_nodes = []
+    # X = rm.layers[-1].output
+    #         self.model.layers.pop()  # two pops to get to pool layer
+    #         self.model.outputs = [self.model.layers[-1].output]
 
     X, y = data.get_data_train_test(data_type, train_test)
     size = len(X)
@@ -97,8 +104,8 @@ def main(train_test):
              image_shape=image_shape, class_limit=4, train_test=train_test)
 
     model = 'lstm'
-    saved_model = 'data/checkpoints/lstm-features.004-0.614.hdf5'
-    # saved_model = 'data/checkpoints/lstm-features.017-0.867.hdf5'
+    # saved_model = 'data/checkpoints/lstm-features.004-0.614.hdf5'
+    saved_model = 'data/checkpoints/lstm-features.017-0.849.hdf5'
 
     if model == 'conv_3d' or model == 'lrcn':
         data_type = 'images'
@@ -113,35 +120,37 @@ def main(train_test):
 
 
 
-    results = []
+    # results = []
     combined_result = []
-    for i in range(len(lstm_results)):
-        results.append([lstm_results[i][0],lstm_results[i][1], conv3d_results[i][0], conv3d_results[i][1], conv_flow_3d_results[i][0], conv_flow_3d_results[i][1]])
-        combined_result.append([lstm_results[i][0]+conv3d_results[i][0]+conv_flow_3d_results[i][0], 3*lstm_results[i][1]+conv3d_results[i][1]+conv_flow_3d_results[i][1]])
+    results = np.concatenate((lstm_results, conv_flow_3d_results, conv3d_results), axis=1)
+    print(results.shape)
+    # for i in range(len(lstm_results)):
+        # results.append([lstm_results[i][0],lstm_results[i][1], conv3d_results[i][0], conv3d_results[i][1], conv_flow_3d_results[i][0], conv_flow_3d_results[i][1]])
+        # combined_result.append([lstm_results[i][0]+conv3d_results[i][0]+conv_flow_3d_results[i][0], 3*lstm_results[i][1]+conv3d_results[i][1]+conv_flow_3d_results[i][1]])
         # combined_result = np.argmax(lstm_results[i][0]+conv3d_results[i][0], lstm_results[i][1]+conv3d_results[i][1])
         # Print f1, precision, and recall scores
     np.save('output_' + train_test + '.npy', results)
     np.save('output_labels_' + train_test + '.npy' , y_lstm)
 
-    print("Conv Flow 3d")
-    print(precision_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
-    print(recall_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
-    print(f1_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
-
-    print("LSTM")
-    print(precision_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
-    print(recall_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
-    print(f1_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
-
-    print("Conv 3d")
-    print(precision_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
-    print(recall_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
-    print(f1_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
-
-    print("Combined")
-    print(precision_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
-    print(recall_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
-    print(f1_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
+    # print("Conv Flow 3d")
+    # print(precision_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
+    # print(recall_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
+    # print(f1_score(y_lstm, np.argmax(conv_flow_3d_results, axis=1), average="macro"))
+    #
+    # print("LSTM")
+    # print(precision_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
+    # print(recall_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
+    # print(f1_score(y_lstm, np.argmax(lstm_results, axis=1) , average="macro"))
+    #
+    # print("Conv 3d")
+    # print(precision_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
+    # print(recall_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
+    # print(f1_score(y_lstm, np.argmax(conv3d_results, axis=1), average="macro"))
+    #
+    # print("Combined")
+    # print(precision_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
+    # print(recall_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
+    # print(f1_score(y_lstm, np.argmax(combined_result, axis=1), average="macro"))
 
         # results.append((lstm_results[i][0]+conv3d_results[i][0], lstm_results[i][1]+conv3d_results[i][1]))
         # print(str(lstm_results[i]),str(conv3d_results[i]))

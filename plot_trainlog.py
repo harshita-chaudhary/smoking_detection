@@ -34,6 +34,6 @@ if __name__ == '__main__':
     # training_log = 'data/logs/cnn-training-1586816403.0097952.log'
     # training_log ="data/logs/conv_3d-training-1586839810.2295735.log"
     # main(training_log, 'cnn')
-    training_log = 'data/logs/lstm-training-1586837484.2873676.log'
+    training_log = 'data/logs/cnn-training-1588144072.2978652.log'
     main(training_log, 'lstm')
 

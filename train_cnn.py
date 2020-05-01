@@ -22,12 +22,14 @@ data = DataSet()
 
 # Helper: Save the model.
 checkpointer = ModelCheckpoint(
-    filepath=os.path.join('data', 'checkpoints', 'inception.{epoch:03d}-{val_loss:.2f}.hdf5'),
+    # filepath=os.path.join('data', 'checkpoints', 'inception.{epoch:03d}-{val_accuracy:.2f}.hdf5'),
+    filepath=os.path.join('data', 'checkpoints', 'inception.hdf5'),
     verbose=1,
+    monitor='val_accuracy',
     save_best_only=True)
 
 # Helper: Stop when we stop learning.
-early_stopper = EarlyStopping(patience=15)
+early_stopper = EarlyStopping(patience=15, monitor='val_accuracy')
 # early_stopper = EarlyStopping(patience=10)
 
 # Helper: TensorBoard
@@ -111,7 +113,6 @@ def freeze_all_but_mid_and_top(model):
     model.compile(
         optimizer=SGD(lr=0.0001, momentum=0.9),
         loss='binary_crossentropy',
-        # metrics=['accuracy', 'top_k_categorical_accuracy'])
         metrics=['accuracy'])
 
     return model

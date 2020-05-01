@@ -12,7 +12,7 @@ test,smoking,nice_smoking_girl_smoke_h_nm_np1_le_med_0,155
 1. Extract features for each video using InceptionV3 by running extract_features_full.py. This stores the features in data/sequences directory.
 1. Run validate_rnn_modified.py to classify the videos using the LSTM model. This generates a plot for each video with x-axis as the frame number and y-axis as the corresponding generated label. Since the videos used for testing are clipped videos and contain smoking or non-smoking action in entirity, the graph shows a straight line at either 0 or 1. 1 denotes smoking and 0 denotes non-smoking.
 
-To run the model on the 5 sample videos provided in Youtube (https://www.youtube.com/playlist?list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG), just run `python validate_rnn_modified.py`after placing the corresponding videos in the data/check/smoking and data/check/non_smoking folders. The output is generated in the data/out folder.
+To run the model on the 5 sample videos provided in Youtube (https://www.youtube.com/playlist?list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG), just run `python validate_rnn_modified.py`.
 
 ## Requirements
 
@@ -38,28 +38,15 @@ HMDB51 dataset link: https://serre-lab.clps.brown.edu/resource/hmdb-a-large-huma
 The RNN model is trained by running `train.py`. This trains the LSTM layers follwed by dense layers. 
 The trained weights are stored in data/chekcpoints. This is used while classifying the videos.
 
-TThe CNN model is trained by running `train_cnn.py`. This trains the InceptionV3 model with initial weights taken from the model trained on ImageNet. The model is further trained on the HMDB data that is present in the data/train and data/test directories.
+TThe CNN model is trained by running `train_cnn.py`. This trains the InceptionV3 model with initial weights taken from the model trained on ImageNet. The model is further train on the HMDB data that is present in the data/train and data/test directories.
 
-The weights are stored in "data/chekcpoints". This is used while extracting the features.
-
-The latest trained model download links:
-
-CNN Model: https://drive.google.com/file/d/1DgfeKLC6t9bbkCGuLiZcpi9iLfgh7LdK/view?usp=sharing
-
-LSTM model: https://drive.google.com/file/d/1Hrn9BZ7uC9jxhHzBEgkQWakzBBr8xAnU/view?usp=sharing
-
-Other trained models:
-
-3D spatial CNN: https://drive.google.com/file/d/18fBz26PdGsl8SXdgp3JNfhq_jWccybyy/view?usp=sharing
-
-3D temporal CNN: https://drive.google.com/file/d/1wDToIFo55bI7dSlasIwTwIiZhOzhptL_/view?usp=sharing
-
-All Models Drive folder: https://drive.google.com/drive/folders/14yx7GTfylT7nIvt_huvvdUSRM0YCsmwy?usp=sharing
+The trained weights are stored in "data/chekcpoints". This is used while extracting the features.
 
 ## Demo/Using models
 
 Demo on how to run is uploaded on Youtube.
-Link: https://www.youtube.com/watch?v=hG3MxYzOZvE&list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG&index=6
+Link: https://www.youtube.com/watch?v=VDf8s8x4WLA&list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG&index=6
+
 ## References
 http://jeffdonahue.com/lrcn/
 

@@ -17,7 +17,6 @@ import os.path
 import os
 from data_processor import DataSet
 import sys
-from processor import process_image
 from keras.models import load_model
 from matplotlib import pyplot as plt
 import json
@@ -65,20 +64,16 @@ def main(videos=5):
     # urllib.request.urlretrieve(url, 'data/checkpoints/lstm-features.hdf5')
     # model = load_model('data/checkpoints/lstm-features.009-0.454.hdf5')
     # model = load_model('data/checkpoints/lstm-features.004-0.614.hdf5')
-    model = load_model('data/checkpoints/lstm-features.017-0.849.hdf5')
+
+
+    cnn_model = 'data/checkpoints/inception.hdf5'
+    # lstm_model = 'data/checkpoints/lstm-features.086-0.895.hdf5'
+    # lstm_model = 'data/checkpoints/lstm-features.051-0.902.hdf5'
+    lstm_model = 'data/checkpoints/lstm-features.017-0.849.hdf5'
 
     extract_files(folders=['check'])
-    extract_full_features(seq_length=seq_length)
-
-    if model == 'conv_3d' or model == 'lrcn':
-        data_type = 'images'
-        image_shape = (80, 80, 3)
-    else:
-        data_type = 'features'
-        image_shape = None
-
-    # validate(data_type, model, saved_model=None,
-    #          image_shape=image_shape, class_limit=4)
+    extract_full_features(weights=cnn_model, seq_length=seq_length)
+    model = load_model(lstm_model)
 
     output_json = {}
     output_json["smoking"] = []
@@ -89,7 +84,7 @@ def main(videos=5):
     # model = load_model('data/checkpoints/inception.057-1.16.hdf5')
     for video in data.data:
         X, y = [], []
-        sequences = data.get_extracted_sequence(data_type, video)
+        sequences = data.get_extracted_sequence('features', video)
         total = sequences.shape[0]
         frames = np.arange(total)
         frame_pred = np.ones(total)
@@ -100,8 +95,9 @@ def main(videos=5):
         frame_pred_prob[:] = np.nan
         # X.append(sequence)
         y.append(data.get_class_one_hot(video[1]))
+        print(y)
         print("video: " + video[2])
-        skip_clips = 15  #100
+        skip_clips = 50  #100
         skip_frames = 2  #6
         start_frame = 0
         end_frame = skip_frames*seq_length
@@ -230,7 +226,7 @@ def label_video(video_path, labels, label_prob):
             break
         frame_num += 1
 
-        if frame_num < start_frame:
+        if frame_num < start_frame or frame_num-1 >= len(labels):
             continue
         pbar.update(1)
 

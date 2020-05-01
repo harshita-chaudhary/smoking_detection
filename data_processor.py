@@ -1,6 +1,3 @@
-"""
-Class for managing our data.
-"""
 import csv
 import numpy as np
 import random
@@ -25,7 +22,6 @@ class threadsafe_iterator:
             return next(self.iterator)
 
 def threadsafe_generator(func):
-    """Decorator"""
     def gen(*a, **kw):
         return threadsafe_iterator(func(*a, **kw))
     return gen
@@ -33,11 +29,6 @@ def threadsafe_generator(func):
 class DataSet():
 
     def __init__(self, seq_length=40, class_limit=None, image_shape=(224, 224, 3), check_dir=None):
-        """Constructor.
-        seq_length = (int) the number of frames to consider
-        class_limit = (int) number of classes to limit the data to.
-            None = no limit.
-        """
         self.seq_length = seq_length
         self.class_limit = class_limit
         if check_dir:
@@ -351,23 +342,3 @@ class DataSet():
 
         # Cut off the last one if needed.
         return output[:size]
-
-    def print_class_from_prediction(self, predictions, nb_to_return=5):
-        """Given a prediction, print the top classes."""
-        # Get the prediction for each label.
-        label_predictions = {}
-        for i, label in enumerate(self.classes):
-            label_predictions[label] = predictions[i]
-
-        # Now sort them.
-        sorted_lps = sorted(
-            label_predictions.items(),
-            key=operator.itemgetter(1),
-            reverse=True
-        )
-
-        # And return the top N.
-        for i, class_prediction in enumerate(sorted_lps):
-            if i > nb_to_return - 1 or class_prediction[1] == 0.0:
-                break
-            print("%s: %.2f" % (class_prediction[0], class_prediction[1]))

@@ -13,7 +13,7 @@ def train(data_type, seq_length, model, saved_model=None,
     # Helper: Save the model.
     checkpointer = ModelCheckpoint(
         filepath=os.path.join('data', 'checkpoints', model + '-' + data_type + \
-            '.{epoch:03d}-{val_loss:.3f}.hdf5'),
+            '.{epoch:03d}-{val_accuracy:.3f}.hdf5'),
         monitor='val_accuracy',
         verbose=1,
         save_best_only=True)
@@ -22,7 +22,7 @@ def train(data_type, seq_length, model, saved_model=None,
     tb = TensorBoard(log_dir=os.path.join('data', 'logs', model))
 
     # Helper: Stop when we stop learning.
-    early_stopper = EarlyStopping(patience=15)
+    early_stopper = EarlyStopping(patience=50, monitor='val_accuracy')
 
     # Helper: Save results.
     timestamp = time.time()

@@ -1,15 +1,6 @@
 """
 This script generates extracted features for each video, which other
 models make use of.
-
-You can change you sequence length and limit to a set number of classes
-below.
-
-class_limit is an integer that denotes the first N classes you want to
-extract features from. This is useful is you don't want to wait to
-extract all 101 classes. For instance, set class_limit = 8 to just
-extract features for the first 8 (alphabetical) classes in the dataset.
-Then set the same number when training models.
 """
 import numpy as np
 import os.path
@@ -39,8 +30,12 @@ class_limit = None  # Number of classes to extract. Can be 1-101 or None for all
 data = DataSet(seq_length=seq_length, class_limit=class_limit)
 
 # get the model.
-model = Extractor(weights="data/checkpoi7nts/inception.009-0.29.hdf5")
+
 # model = Extractor(weights="data/checkpoints/inception.035-0.17.hdf5")
+
+# model = Extractor(weights="data/checkpoints/inception.009-0.29.hdf5")
+
+model = Extractor(weights="data/checkpoints/inception.hdf5")
 
 # Loop through data.
 # print(data.data)
@@ -67,11 +62,11 @@ for video in data.data:
     for image in frames:
         features = model.extract(image)
         sequence.append(features)
-    # print(path)
-    # if not (os.path.exists(path)):
-    #     # create the directory you want to save to
-    #     os.mkdir(path)
-    # Save the sequence.
+
+    dir = os.path.join('data', 'sequences')
+    if not (os.path.exists(dir)):
+        os.mkdir(dir)
+    #Save the sequence.
     np.save(path, sequence)
 
     pbar.update(1)

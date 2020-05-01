@@ -9,7 +9,7 @@ class Extractor():
         """Either load pretrained from imagenet, or load our saved
         weights from our own training."""
 
-        self.weights = weights  # so we can check elsewhere which model
+        self.weights = weights
 
         if weights is None:
             # Get model with pretrained weights.
@@ -29,7 +29,6 @@ class Extractor():
             self.model = load_model(weights)
 
             # Then remove the top so we get features not predictions.
-            # From: https://github.com/fchollet/keras/issues/2371
             self.model.layers.pop()
             self.model.layers.pop()  # two pops to get to pool layer
             self.model.outputs = [self.model.layers[-1].output]

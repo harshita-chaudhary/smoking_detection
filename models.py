@@ -23,7 +23,6 @@ class ResearchModels():
             mlp
             conv_3d
             c3d
-        `nb_classes` = the number of classes to predict
         `seq_length` = the length of our video sequences
         `saved_model` = the path to a saved Keras model to load
         """
@@ -35,10 +34,7 @@ class ResearchModels():
         self.nb_classes = nb_classes
         self.feature_queue = deque()
 
-        # Set the metrics. Only use top k if there's a need.
         metrics = ['accuracy']
-        # if self.nb_classes >= 10:
-        #     metrics.append('top_k_categorical_accuracy')
 
         # Get the appropriate model.
         if self.saved_model is not None:
@@ -196,11 +192,6 @@ class ResearchModels():
         return model
 
     def conv_flow_3d(self):
-        """
-        Build a 3D convolutional network, based loosely on C3D.
-            https://arxiv.org/pdf/1412.0767.pdf
-        """
-        # Model.
         model = Sequential()
         model.add(Conv3D(
             32, (3,3,3), activation='relu', input_shape=self.input_shape

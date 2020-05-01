@@ -30,7 +30,7 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 
-def extract_full_features(seq_length = 40):
+def extract_full_features(weights, seq_length = 40):
     # Set defaults.
 
     class_limit = None  # Number of classes to extract. Can be 1-101 or None for all.
@@ -40,7 +40,8 @@ def extract_full_features(seq_length = 40):
 
     # get the model.
     # model = Extractor()
-    model = Extractor(weights="data/checkpoints/inception.009-0.29.hdf5")
+    # model = Extractor(weights="data/checkpoints/inception.009-0.29.hdf5")
+    model = Extractor(weights)
 
     # Loop through data.
     print(data.data)
