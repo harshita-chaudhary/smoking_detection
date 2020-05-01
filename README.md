@@ -18,7 +18,7 @@ Output:
 Testing multiple videos:
 1.	Place the videos to be tested in data/check folder under smoking and non-smoking directories. This is done to ensure that we remember which class the testing video belongs to. 
 
-2.	Set the model weights in ‘validate_rnn_modified.py’ file to point to the corresponding saved model in data/checkpoints directory.
+2.	Set the model weights in ‘validate_rnn_modified.py’ file to point to the corresponding saved model in data/checkpoints directory or the downloaded model.
 
 3.	Run ‘validate_rnn_modified.py’ to classify the videos using the LSTM model. This generates a plot for each video with x-axis as the frame number and y-axis as the corresponding generated label. Since the videos used for testing are clipped videos and contain smoking or non-smoking action in entirety, the graph shows a straight line at either 0 or 1. 1 denotes smoking and 0 denotes non-smoking.
 
@@ -62,5 +62,12 @@ https://keras.io/models/about-keras-models/
 
 https://blog.coast.ai/five-video-classification-methods-implemented-in-keras-and-tensorflow-99cad29cc0b5
 
+https://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/#dataset
 
+http://activity-net.org/download.html
 
+https://deepmind.com/research/open-source/kinetics
+
+https://keras.io/models/about-keras-models/
+
+https://sites.google.com/view/anxiaojiang/csce636
