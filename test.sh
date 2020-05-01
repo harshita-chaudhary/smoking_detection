@@ -15,5 +15,5 @@ chmod +x download_models.sh
 ./download_models.sh
 python test.py --video_name $VIDEO
 #rename the generated timeLabel.json and figure with your UIN.
-cp timeLable.json ../$UIN_JSON
-cp timeLable.jpg ../$UIN_JPG
+cp timeLabel.json ../$UIN_JSON
+cp timeLabel.jpg ../$UIN_JPG
