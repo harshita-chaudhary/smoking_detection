@@ -21,7 +21,6 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 
-
 # Set defaults.
 seq_length = 50
 class_limit = None  # Number of classes to extract. Can be 1-101 or None for all.
@@ -29,13 +28,14 @@ class_limit = None  # Number of classes to extract. Can be 1-101 or None for all
 # Get the dataset.
 data = DataSet(seq_length=seq_length, class_limit=class_limit)
 
+model = Extractor(weights="data/checkpoints/inception.hdf5")
+
 # get the model.
 
 # model = Extractor(weights="data/checkpoints/inception.035-0.17.hdf5")
 
 # model = Extractor(weights="data/checkpoints/inception.009-0.29.hdf5")
 
-model = Extractor(weights="data/checkpoints/inception.hdf5")
 
 # Loop through data.
 # print(data.data)
