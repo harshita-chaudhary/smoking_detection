@@ -1,18 +1,22 @@
 ## How to run the model to test the samples
 
-The features have been extracted using CNN and saved in data/sequences directory in the .npy format.
-These are corresponding to the five videos uploaded on Youtube - 3 smoking, 2 non-smoking
+Testing one video:
 
-The following steps were followed to extract the features:
-1. Move the test videos to data/test directory.
-1. Run data/2_extract_file.py : This extracts frames from all the files in the data/train and data/test directories, stores them in the same directory and creates a csv file with the names of the files and number of frame present in the video.
-Sample entries in the csv file:
-test,non_smoking,ChikiMovie_ride_horse_f_cm_np1_fr_med_1,290
-test,smoking,nice_smoking_girl_smoke_h_nm_np1_le_med_0,155
-1. Extract features for each video using InceptionV3 by running extract_features_full.py. This stores the features in data/sequences directory.
-1. Run validate_rnn_modified.py to classify the videos using the LSTM model. This generates a plot for each video with x-axis as the frame number and y-axis as the corresponding generated label. Since the videos used for testing are clipped videos and contain smoking or non-smoking action in entirity, the graph shows a straight line at either 0 or 1. 1 denotes smoking and 0 denotes non-smoking.
+python test.py --video_name [video_name]
 
-To run the model on the 5 sample videos provided in Youtube (https://www.youtube.com/playlist?list=PLFrrF91jLrRZhb-3Dcq8wIwYgWP-t0pFG), just run `python validate_rnn_modified.py`.
+Output: 
+•	timeLabel.json: JSON file containing the time in seconds vs probability of smoking action
+•	timeLabel.jpg: Image showing action label. 0-non-smoking, 1-smoking
+•	[video_name].avi: Video overlaid with label and probability of each frame
+
+Testing multiple videos:
+
+Testing multiple videos:
+1.	Place the videos to be tested in data/check folder under smoking and non-smoking directories. This is done to ensure that we remember which class the testing video belongs to. 
+
+2.	Set the model weights in ‘validate_rnn_modified.py’ file to point to the corresponding saved model in data/checkpoints directory.
+
+3.	Run ‘validate_rnn_modified.py’ to classify the videos using the LSTM model. This generates a plot for each video with x-axis as the frame number and y-axis as the corresponding generated label. Since the videos used for testing are clipped videos and contain smoking or non-smoking action in entirety, the graph shows a straight line at either 0 or 1. 1 denotes smoking and 0 denotes non-smoking.
 
 ## Requirements
 
