@@ -7,3 +7,4 @@ h5py
 opencv-python
 tensorflow==1.15
 ffmpeg
+youtube_dl
