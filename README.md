@@ -1,15 +1,19 @@
 ## How to run the model to test the samples
 
-Testing one video:
+### Testing one video:
 
 python test.py --video_name [video_name]
 
-Output: 
+Output:
+
 •	timeLabel.json: JSON file containing the time in seconds vs probability of smoking action
+
 •	timeLabel.jpg: Image showing action label. 0-non-smoking, 1-smoking
+
 •	[video_name].avi: Video overlaid with label and probability of each frame
 
-Testing multiple videos:
+
+### Testing multiple videos:
 
 Testing multiple videos:
 1.	Place the videos to be tested in data/check folder under smoking and non-smoking directories. This is done to ensure that we remember which class the testing video belongs to. 
