@@ -7,11 +7,13 @@ UIN_JSON="529005682.json"
 UIN_JPG="529005682.jpg"
 git clone $GIT_REPO_URL
 cd $REPO
+cp ../$VIDEO .
 #Replace this line with commands for running your test python file.
 echo $VIDEO
 pip install -r requirements.txt
+chmod +x download_models.sh
 ./download_models.sh
 python test.py --video_name $VIDEO
 #rename the generated timeLabel.json and figure with your UIN.
-cp timeLable.json $UIN_JSON
-cp timeLable.jpg $UIN_JPG
+cp timeLable.json ../$UIN_JSON
+cp timeLable.jpg ../$UIN_JPG
