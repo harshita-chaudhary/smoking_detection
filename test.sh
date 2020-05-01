@@ -1,6 +1,5 @@
 #!/bin/bash
-#Replace the variables with your github repo url, repo name, test
-video name, json named by your UIN
+#Replace the variables with your github repo url, repo name, test video name, json named by your UIN
 GIT_REPO_URL="https://github.com/harshita-chaudhary/smoking_detection.git"
 REPO="smoking_detection"
 VIDEO="test_video1.mp4"
