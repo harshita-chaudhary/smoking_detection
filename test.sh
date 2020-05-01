@@ -11,6 +11,7 @@ cd $REPO
 #Replace this line with commands for running your test python file.
 echo $VIDEO
 pip install -r requirements.txt
+./download_models.sh
 python test.py --video_name $VIDEO
 #rename the generated timeLabel.json and figure with your UIN.
 cp timeLable.json $UIN_JSON
