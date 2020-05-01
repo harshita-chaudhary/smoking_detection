@@ -31,8 +31,8 @@ def main(args):
     # model = load_model('data/checkpoints/lstm-features.004-0.614.hdf5')
     # model = load_model('data/checkpoints/lstm-features.017-0.849.hdf5')
 
-    cnn_model = 'data/checkpoints/inception.hdf5'
-    lstm_model = 'data/checkpoints/lstm-features.086-0.895.hdf5'
+    cnn_model = 'cnn.hdf5'
+    lstm_model = 'lstm.hdf5'
 
     model = load_model(lstm_model)
     extractor = Extractor(weights=cnn_model)
