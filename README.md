@@ -49,6 +49,24 @@ HMDB51 dataset link: https://serre-lab.clps.brown.edu/resource/hmdb-a-large-huma
 ActivityNet200 dataset link: http://activity-net.org/download.html
 Kinetics700 dataset link: https://deepmind.com/research/open-source/kinetics
 
+## Saved models
+
+The weights for models trained locally are stored in "data/chekcpoints".
+
+The latest trained model download links:
+
+CNN Model: https://drive.google.com/file/d/1DgfeKLC6t9bbkCGuLiZcpi9iLfgh7LdK/view?usp=sharing
+
+LSTM model: https://drive.google.com/file/d/1Hrn9BZ7uC9jxhHzBEgkQWakzBBr8xAnU/view?usp=sharing
+
+Other trained models:
+
+3D spatial CNN: https://drive.google.com/file/d/18fBz26PdGsl8SXdgp3JNfhq_jWccybyy/view?usp=sharing
+
+3D temporal CNN: https://drive.google.com/file/d/1wDToIFo55bI7dSlasIwTwIiZhOzhptL_/view?usp=sharing
+
+All Models Drive folder: https://drive.google.com/drive/folders/14yx7GTfylT7nIvt_huvvdUSRM0YCsmwy?usp=sharing
+
 ## Training models
 
 TThe CNN model is trained by running `train_cnn.py`. This trains the InceptionV3 model with initial weights taken from the model trained on ImageNet. The model is further train on the HMDB data that is present in the data/train and data/test directories.
