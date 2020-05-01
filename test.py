@@ -41,7 +41,8 @@ def main(args):
     if not os.path.exists('tmp'):
         os.makedirs('tmp')
     dest = os.path.join('tmp', filename_no_ext + '-%04d.jpg')
-    call(["ffmpeg", "-i", video_name, "-filter:v", "fps=fps=30", dest], shell=True)
+    # Set shell=True for WIndows
+    call(["ffmpeg", "-i", video_name, "-filter:v", "fps=fps=30", dest], shell=False)
     generated_frames = glob.glob(os.path.join('tmp', filename_no_ext + '*.jpg'))
     nb_frames = len(generated_frames)
     print("Generated %d frames for %s" % (nb_frames, filename_no_ext))
