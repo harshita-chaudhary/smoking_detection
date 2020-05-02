@@ -11,6 +11,8 @@ cd $REPO
 #Replace this line with commands for running your test python file.
 pip install -r requirements.txt
 youtube-dl -f best -f mp4 "https://www.youtube.com/watch?v=OCT3Y3BhrLo" -o $VIDEO
+# Install ffmpeg
+sudo apt install ffmpeg
 echo $VIDEO
 chmod +x download_models.sh
 ./download_models.sh
