@@ -9,9 +9,9 @@ git clone $GIT_REPO_URL
 cd $REPO
 # cp ../$VIDEO .
 #Replace this line with commands for running your test python file.
+pip install -r requirements.txt
 youtube-dl -f best -f mp4 "https://www.youtube.com/watch?v=OCT3Y3BhrLo" -o $VIDEO
 echo $VIDEO
-pip install -r requirements.txt
 chmod +x download_models.sh
 ./download_models.sh
 python test.py --video_name $VIDEO
