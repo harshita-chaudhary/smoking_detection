@@ -46,7 +46,7 @@ def main(args):
     nb_frames = len(generated_frames)
     print("Generated %d frames for %s" % (nb_frames, filename_no_ext))
     pbar = tqdm(total=len(generated_frames))
-
+    print("\nExtracting features ...")
     # Now loop through and extract features to build the sequence.
     sequence = []
     for image in generated_frames:
@@ -154,7 +154,7 @@ def main(args):
     if len(frames)/30 > xlabel_count:
         ticker_len = math.ceil(len(frames)/(30*xlabel_count))
     plt.xticks(np.arange(min(frames), max(frames) + ticker_len, (30 * ticker_len)),
-               np.arange(min(frames) / 30, max(frames) / 30 + 30, ticker_len))
+               np.arange(int(min(frames) / 30), int(max(frames) / 30) + 30, ticker_len))
 
     output_path = "timeLabel.jpg"
     print("Saving output labels to: ", output_path)
